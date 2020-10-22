@@ -17,6 +17,7 @@ contract CampaignFactory {
 contract Campaign {
     
     struct Request {
+        bool isActive;
         string description;
         uint256 value;
         address payable recipient;
@@ -31,7 +32,7 @@ contract Campaign {
     uint256 private _approversCount;
 
     uint256 _numRequests;
-    mapping(uint256 => Request) _requests;
+    mapping(uint256 => Request) public requests;
     
     constructor(address creator, uint256 minimumContribution) {
         _manager = creator;
@@ -49,9 +50,10 @@ contract Campaign {
         _approversCount++;
     }
     
-    function createRequest(string memory description, uint256 value, address payable recipient) public restricted returns (uint campaignId) {
-        campaignId = _numRequests++;
-        Request storage r = _requests[campaignId];
+    function createRequest(string memory description, uint256 value, address payable recipient) public restricted {
+        uint256 campaignId = _numRequests++;
+        Request storage r = requests[campaignId];
+        r.isActive = true;
         r.description = description;
         r.value = value;
         r.recipient = recipient;
@@ -59,7 +61,7 @@ contract Campaign {
     }
     
     function approveRequest(uint256 index) public {
-        Request storage request = _requests[index];
+        Request storage request = requests[index];
         
         require(_approvers[msg.sender]);
         require(!request.approvals[msg.sender]);
@@ -69,7 +71,7 @@ contract Campaign {
     }
     
     function finalizeRequest(uint256 index) public restricted {
-        Request storage request = _requests[index];
+        Request storage request = requests[index];
         require(!request.complete);
         require(request.approvalCount > (_approversCount / 2));
         
@@ -81,7 +83,11 @@ contract Campaign {
         return _manager;
     }
     
-    function getMinimunContribution() public view returns (uint256) {
+    function isApprover(address approver) public view returns (bool) {
+        return _approvers[approver];
+    }
+
+    function getMinimumContribution() public view returns (uint256) {
         return _minimumContribution;
     }
 }
