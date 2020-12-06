@@ -1,18 +1,48 @@
-import React, { Component, useEffect } from 'react';
+import React from 'react';
+import 'semantic-ui-css/semantic.min.css';
+import { CardGroup, Button, Menu } from 'semantic-ui-react';
+import Layout from '../components/Layout';
 import factory from '../ethereum/factory';
 
-function CampaignIndex() {
+export const getServerSideProps = async () => {
+    const campaign = await factory.methods.getDeployedCampaigns().call();
 
-    useEffect(() => {
-        async function getDeployedCampaigns() {
-            const campaigns = await factory.methods.getDeployedCampaigns().call();
-            console.log(campaigns);
-        };
+    return { props: { campaign } };
+}
 
-        getDeployedCampaigns();
-    }, []);
+function CampaignIndex(props) {
+    const {
+        campaign
+    } = props;
 
-    return <div>Campaigns index!</div>
+
+    const renderCampaigns = () => {
+        const items = campaign.map(address => {
+            return {
+                header: address,
+                description: <a>View Campaign</a>,
+                fluid: true
+            };
+        });
+
+        return <CardGroup items={items} /> 
+    }
+
+    return (
+        <Layout>
+            <div>
+                <h3>Open Campaigns</h3>
+                <Button 
+                    content='Create Campaign' 
+                    icon='add'
+                    labelPosition='left' 
+                    floated="right"
+                    primary  
+                />
+                {renderCampaigns()}
+            </div>
+        </Layout>
+    );
 };
 
 export default CampaignIndex;
