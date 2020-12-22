@@ -1,25 +1,21 @@
 import React from 'react';
 import { Icon, Menu } from 'semantic-ui-react';
+import Link from 'next/link';
 
 const Header = props => {
 
     return (
         <Menu style={styles}>
-            <Menu.Item
-                name='KickStarter'
-            >
-                KickStarter
-            </Menu.Item>
+            <Link href="/">
+                <a className='item'>KickStarter</a>
+            </Link>
             <Menu.Menu position='right'>
-                <Menu.Item name='Campaigns'>
-                    Campaigns
-                </Menu.Item>
-                <Menu.Item 
-                    name="Add"
-                    onClick={() => {}}
-                >
-                    <Icon name='add' />
-                </Menu.Item>
+                <Link href="/">
+                    <a className='item'>Campaigns</a>
+                </Link>
+                <Link href="/campaigns/new">
+                    <a className='item'> <Icon name='add' /></a>
+                </Link>
             </Menu.Menu>
         </Menu>
     );

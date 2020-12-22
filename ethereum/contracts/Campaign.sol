@@ -90,4 +90,20 @@ contract Campaign {
     function getMinimumContribution() public view returns (uint256) {
         return _minimumContribution;
     }
+
+    function getRequestCount() public view returns (uint256) {
+        return _numRequests;
+    }
+    
+    function getSummary() public view returns (
+        uint256, uint256, uint256, uint256, address
+    ) {
+        return (
+            _minimumContribution,
+            address(this).balance,
+            _numRequests,
+            _approversCount,
+            _manager
+        );
+    }
 }

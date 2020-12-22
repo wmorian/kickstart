@@ -2,24 +2,27 @@ import React from 'react';
 import { CardGroup, Button } from 'semantic-ui-react';
 import Layout from '../components/Layout';
 import factory from '../ethereum/factory';
+import Link from 'next/link';
 
 export const getServerSideProps = async () => {
-    const campaign = await factory.methods.getDeployedCampaigns().call();
+    const campaigns = await factory.methods.getDeployedCampaigns().call();
 
-    return { props: { campaign } };
+    return { props: { campaigns } };
 }
 
 function CampaignIndex(props) {
     const {
-        campaign
+        campaigns
     } = props;
 
-
     const renderCampaigns = () => {
-        const items = campaign.map(address => {
+        const items = campaigns.map(address => {
             return {
                 header: address,
-                description: <a>View Campaign</a>,
+                description: (
+                    <Link href={`/campaigns/${address}`}>
+                        <a>View Campaign</a>
+                    </Link>),
                 fluid: true
             };
         });
@@ -31,13 +34,17 @@ function CampaignIndex(props) {
         <Layout>
             <div>
                 <h3>Open Campaigns</h3>
-                <Button 
-                    content='Create Campaign' 
-                    icon='add'
-                    labelPosition='left' 
-                    floated="right"
-                    primary  
-                />
+                <Link href='/campaigns/new'>
+                    <a className='item'>
+                        <Button 
+                            content='Create Campaign' 
+                            icon='add'
+                            labelPosition='left' 
+                            floated="right"
+                            primary
+                        />
+                    </a>
+                </Link>
                 {renderCampaigns()}
             </div>
         </Layout>
