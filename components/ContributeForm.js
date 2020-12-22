@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';  
 import { Button, Form, Input, Message } from 'semantic-ui-react';
 import web3 from '../ethereum/web3';
 import campaign from '../ethereum/campaign';
@@ -8,6 +9,8 @@ const ContributeForm = props => {
         address
     } = props;
 
+    const router = useRouter();
+
     const [value, setValue] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
@@ -16,15 +19,17 @@ const ContributeForm = props => {
         event.preventDefault();
 
         setLoading(true);
-        const currentCampaign = campaign(address);
         setErrorMessage("");
+        const currentCampaign = campaign(address);
         try {
             const accounts = await web3.eth.getAccounts();
             await currentCampaign.methods.contribute()
                 .send({ 
                     from: accounts[0], 
                     value: web3.utils.toWei(value, 'ether') 
-                });   
+                });
+            setValue('');
+            router.replace(`/campaigns/${address}`); 
         } catch (error) {
             setErrorMessage(error.message);
         }

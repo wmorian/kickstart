@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
+import Link from 'next/link'; 
 import Layout from '../../../components/Layout';
 import ContributeForm from '../../../components/ContributeForm';
 import campaign from '../../../ethereum/campaign';
-import { Card, Grid } from 'semantic-ui-react';
+import { Button, Card, Grid } from 'semantic-ui-react';
 import web3 from '../../../ethereum/web3';
 
 export const getServerSideProps = async context => {
@@ -29,9 +29,6 @@ const Campaign = props => {
         approversCount,
         manager
     } = props;
-
-    const router = useRouter();
-    const { address } = router.query;
 
     const renderDetails = () => {
         const details = [
@@ -64,7 +61,7 @@ const Campaign = props => {
         ];
 
         return <Card.Group items={details} /> 
-    }
+    };
 
     return (
         <Layout>
@@ -73,6 +70,13 @@ const Campaign = props => {
                 <Grid>
                     <Grid.Column width={10}>
                         {renderDetails()}
+                        <Link href={`/campaigns/${campaignAddress}/requests}`}>
+                            <a>
+                                <Button primary>
+                                    View Requests
+                                </Button>
+                            </a>
+                        </Link>
                     </Grid.Column>
                     <Grid.Column width={6}>
                         <ContributeForm address={campaignAddress}/>
