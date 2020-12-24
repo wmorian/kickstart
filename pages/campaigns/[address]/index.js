@@ -65,12 +65,19 @@ const Campaign = props => {
 
     return (
         <Layout>
-            <div>
-                <h3>Campaign Details</h3>
-                <Grid>
+            <h3>Campaign Details</h3>
+            <Grid>
+                <Grid.Row>
                     <Grid.Column width={10}>
                         {renderDetails()}
-                        <Link href={`/campaigns/${campaignAddress}/requests}`}>
+                    </Grid.Column>
+                    <Grid.Column width={6}>
+                        <ContributeForm address={campaignAddress}/>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column>
+                        <Link href={`/campaigns/${campaignAddress}/requests`}>
                             <a>
                                 <Button primary>
                                     View Requests
@@ -78,11 +85,8 @@ const Campaign = props => {
                             </a>
                         </Link>
                     </Grid.Column>
-                    <Grid.Column width={6}>
-                        <ContributeForm address={campaignAddress}/>
-                    </Grid.Column>
-                </Grid>
-            </div>
+                </Grid.Row>
+            </Grid>
         </Layout>
     )
 }

@@ -32,21 +32,19 @@ function CampaignIndex(props) {
 
     return (
         <Layout>
-            <div>
-                <h3>Open Campaigns</h3>
-                <Link href='/campaigns/new'>
-                    <a className='item'>
-                        <Button 
-                            content='Create Campaign' 
-                            icon='add'
-                            labelPosition='left' 
-                            floated="right"
-                            primary
-                        />
-                    </a>
-                </Link>
-                {renderCampaigns()}
-            </div>
+            <h3>Open Campaigns</h3>
+            <Link href='/campaigns/new'>
+                <a className='item'>
+                    <Button 
+                        content='Create Campaign' 
+                        icon='add'
+                        labelPosition='left' 
+                        floated="right"
+                        primary
+                    />
+                </a>
+            </Link>
+            {renderCampaigns()}
         </Layout>
     );
 };
