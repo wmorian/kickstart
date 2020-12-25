@@ -9,7 +9,9 @@ export const getServerSideProps = async context => {
 
     const currentCampaign = campaign(context.query.address);
     const requestCount = await currentCampaign.methods.getRequestCount().call();
+    const summary = await currentCampaign.methods.getSummary().call();
 
+    // doesn't work sometimes!!!
     // const requests = await Promise.all(
     //     Array(requestCount)
     //         .fill()
@@ -34,7 +36,8 @@ export const getServerSideProps = async context => {
         props: { 
             address: context.query.address,
             requests: requests,
-            requestCount: requestCount
+            requestCount: requestCount,
+            approversCount: summary[3],
         }
     };
 }
@@ -43,16 +46,19 @@ const RequestsList = props => {
     const {
         address,
         requests,
-        requestCount
+        requestCount,
+        approversCount
     } = props;
 
-    const renderRequests = () => {
-        requests.map((req, i) => {
+    const renderRows = () => {
+        return requests.map((req, i) => {
             return (
                 <RequestRow 
                     key={i}
+                    id={i}
                     request={req}
                     address={address}
+                    approversCount={approversCount}
                 />
             )
         })
@@ -63,13 +69,17 @@ const RequestsList = props => {
             <h3>Requests</h3>
             <Link href={`/campaigns/${address}/requests/new`}>
                 <a>
-                    <Button primary>
+                    <Button
+                        floated='right'
+                        style={{ marginBottom: 10 }}
+                        primary
+                    >
                         Add Request
                     </Button>
                 </a>
             </Link>
 
-            <Table celled>
+            <Table singleLine>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell>ID</Table.HeaderCell>
@@ -82,9 +92,10 @@ const RequestsList = props => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {/* {renderRequests()} */}
+                    {renderRows()}
                 </Table.Body>
             </Table>
+            <div>Found { requestCount } requests</div>
         </Layout>
     )
 }
